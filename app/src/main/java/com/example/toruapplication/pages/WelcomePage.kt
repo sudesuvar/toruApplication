@@ -1,5 +1,6 @@
 package com.example.toruapplication.pages
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,19 +30,19 @@ fun WelcomePage(){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
-                .background(color = colorResource(id = R.color.BrokenWhite)),
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Logo
-            //Image(
-              //  painter = painterResource(id = ),
-               // contentDescription = "Logo",
-               // modifier = Modifier
-                 //   .size(200.dp) // Logo boyutu ayarlandı
-                  //  .padding(bottom = 32.dp)
-            //)
+
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo",
+                modifier = Modifier
+                    .size(200.dp) // Logo boyutu ayarlandı
+                    .padding(bottom = 32.dp)
+            )
+
 
 
             Text(
