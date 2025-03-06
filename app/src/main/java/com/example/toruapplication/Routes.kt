@@ -6,5 +6,6 @@ object Routes {
     var WelcomePage = "welcome"
     var LoginPage = "login"
     var SignupPage = "signup"
+    var MainPage = "main"
 
 }

@@ -115,7 +115,7 @@ fun LoginPage(navController: NavController) {
 
             Button(
                 onClick = {
-
+                    navController.navigate("main")
                 },
                 modifier = Modifier
                     .fillMaxWidth()

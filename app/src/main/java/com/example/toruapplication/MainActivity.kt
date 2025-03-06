@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.toruapplication.pages.LoginPage
+import com.example.toruapplication.pages.MainPage
 import com.example.toruapplication.pages.WelcomePage
 import com.example.toruapplication.ui.theme.ToruApplicationTheme
 import com.example.toruapplication.pages.SignupPage
@@ -29,6 +30,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(Routes.SignupPage,) {
                         SignupPage(navController,)
+                    }
+                    composable(Routes.MainPage,) {
+                        MainPage(navController,)
                     }
                 })
             }
