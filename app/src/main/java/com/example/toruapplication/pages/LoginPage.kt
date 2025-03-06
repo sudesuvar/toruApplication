@@ -1,7 +1,9 @@
 package com.example.toruapplication.pages
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,20 +12,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.toruapplication.R
 
 
 @Composable
-@Preview
-fun LoginPage() {
+fun LoginPage(navController: NavController) {
+    val focusManager = LocalFocusManager.current // Klavye yönetimi için focusManager
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val passwordVisible = remember { mutableStateOf(false) }
@@ -33,6 +38,11 @@ fun LoginPage() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            }
     ) {
         Column(
             modifier = Modifier
@@ -120,12 +130,34 @@ fun LoginPage() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Forgot Password?",
+                text = "Forgot Password ?",
                 color = Color.Black,
                 modifier = Modifier.clickable { isBottomSheetOpen.value = true },
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Don't have an account ? Signup ?",
+                color = Color.Black,
+                modifier = Modifier.clickable { navController.navigate("signup") },
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter =  painterResource(id = R.drawable.google) ,
+                    contentDescription = "Google Image",
+                    modifier = Modifier.size(48.dp).clickable {}
+                )
+            }
         }
 
         if (isBottomSheetOpen.value) {
@@ -169,6 +201,7 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit) {
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+
 
                 OutlinedTextField(
                     value = "",

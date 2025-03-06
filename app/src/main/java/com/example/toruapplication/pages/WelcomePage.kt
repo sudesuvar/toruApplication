@@ -1,11 +1,7 @@
 package com.example.toruapplication.pages
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -18,12 +14,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.toruapplication.R
+import com.example.toruapplication.Routes
 
 
 @Composable
-@Preview
-fun WelcomePage(){
+fun WelcomePage(navController: NavController){
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -57,7 +54,7 @@ fun WelcomePage(){
 
             // Login Butonu
             Button(
-                onClick = {  },
+                onClick = {navController.navigate(Routes.LoginPage)  },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.Primary)),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
@@ -77,7 +74,7 @@ fun WelcomePage(){
 
             // Sign Up Butonu
             Button(
-                onClick = { },
+                onClick = {navController.navigate(Routes.SignupPage)},
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.Primary)),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier

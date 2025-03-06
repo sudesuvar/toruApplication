@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.toruapplication" />
+                  <option name="mobileSdkAppId" value="1:112127424957:android:a973a9b2998ab4b03d3ad4" />
+                  <option name="projectId" value="toru-b9ec7" />
+                  <option name="projectNumber" value="112127424957" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

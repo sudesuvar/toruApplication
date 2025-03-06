@@ -1,6 +1,8 @@
 package com.example.toruapplication.pages
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,20 +13,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.toruapplication.R
 
 
 @Composable
-@Preview
-fun SignUpPage() {
+fun SignupPage(navController: NavController) {
+    val focusManager = LocalFocusManager.current // Klavye yönetimi için focusManager
     val name = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
@@ -33,7 +37,12 @@ fun SignUpPage() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White) // Background color to white for the whole screen
+            .background(Color.White)
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            }
     ) {
         Column(
             modifier = Modifier
@@ -44,7 +53,7 @@ fun SignUpPage() {
         ) {
             Text(
                 text = "Sign Up",
-                color = Color.Black, // Text color set to black
+                color = Color.Black,
                 fontSize = 28.sp,
                 style = MaterialTheme.typography.titleLarge
             )
@@ -142,6 +151,17 @@ fun SignUpPage() {
             ) {
                 Text("Sign Up", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
+
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Do you have a account ?",
+                color = Color.Black,
+                modifier = Modifier.clickable { navController.navigate("login") },
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }
