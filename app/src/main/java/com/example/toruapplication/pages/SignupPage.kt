@@ -1,5 +1,7 @@
 package com.example.toruapplication.pages
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -8,12 +10,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,15 +29,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.toruapplication.R
+import com.example.toruapplication.Routes
+import com.example.toruapplication.viewmodel.AuthState
+import com.example.toruapplication.viewmodel.AuthViewModel
 
 
 @Composable
-fun SignupPage(navController: NavController) {
-    val focusManager = LocalFocusManager.current // Klavye yönetimi için focusManager
+fun SignupPage(navController: NavController, viewModel: AuthViewModel) {
+    val authState = viewModel.authState.observeAsState()
+    val focusManager = LocalFocusManager.current
     val name = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val passwordVisible = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+
+    LaunchedEffect(authState.value) {
+        when (val currentState = authState.value) {
+            is AuthState.Authenticated -> {
+                navController.navigate(Routes.MainPage)
+            }
+            is AuthState.Error -> {
+                Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
+            }
+            else -> Unit
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -141,7 +164,10 @@ fun SignupPage(navController: NavController) {
 
             // Sign Up Button
             Button(
-                onClick = {},
+                onClick = {
+                    Log.i("Credential", "Email : $email Password : $password")
+                    viewModel.signup(email.value, password.value, name.value)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
