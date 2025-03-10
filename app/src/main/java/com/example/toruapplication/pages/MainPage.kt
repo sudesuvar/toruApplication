@@ -6,5 +6,5 @@ import com.example.toruapplication.Components.ActionBar
 
 @Composable
 fun MainPage(navController: NavController){
-    ActionBar()
+    ActionBar(navController = navController)
 }

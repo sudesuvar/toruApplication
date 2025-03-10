@@ -18,11 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.toruapplication.R
+import com.example.toruapplication.Routes
 
-@Preview
+
 @Composable
-fun ActionBar() {
+fun ActionBar(navController: NavController) {
     var isExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -31,7 +33,7 @@ fun ActionBar() {
                 AnimatedVisibility(visible = isExpanded, enter = androidx.compose.animation.expandVertically(), exit = androidx.compose.animation.shrinkVertically()) {
                     Column {
                         SmallFab(icon = Icons.Default.Settings, contentDescription = "Setting Page", modifier = Modifier, color = colorResource(R.color.Primary)) {
-                            println("Settings clicked")
+                            navController.navigate(Routes.SettingsPage)
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         SmallFab(icon = Icons.Default.Edit, contentDescription = "Add Note", modifier = Modifier, color = colorResource(R.color.Primary)) {

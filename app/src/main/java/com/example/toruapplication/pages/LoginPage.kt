@@ -57,7 +57,6 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
@@ -73,7 +72,7 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
         ) {
             Text(
                 text = "Login",
-                color = Color.Black,
+                color =MaterialTheme.colorScheme.onSurface,
                 fontSize = 28.sp,
                 style = MaterialTheme.typography.titleLarge
             )
