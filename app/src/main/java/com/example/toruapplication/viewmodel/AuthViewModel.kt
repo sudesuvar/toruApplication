@@ -1,8 +1,12 @@
 package com.example.toruapplication.viewmodel
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthViewModel {
@@ -12,6 +16,9 @@ class AuthViewModel {
 
     private val _authState = MutableLiveData<AuthState>()
     val authState: LiveData<AuthState> = _authState
+
+    private val _user = mutableStateOf<FirebaseUser?>(null)
+    val user: State<FirebaseUser?> = _user
 
 
     init {
@@ -75,6 +82,19 @@ class AuthViewModel {
                 }
             }
 
+
+    }
+    fun googleSignup(idToken: String, onResult: (Boolean) -> Unit){
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _user.value = auth.currentUser
+                    onResult(true)
+                } else {
+                    onResult(false)
+                }
+            }
 
     }
 

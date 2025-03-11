@@ -1,6 +1,11 @@
 package com.example.toruapplication.pages
 
+import android.app.Activity
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,6 +35,11 @@ import com.example.toruapplication.R
 import com.example.toruapplication.Routes
 import com.example.toruapplication.viewmodel.AuthState
 import com.example.toruapplication.viewmodel.AuthViewModel
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 
 @Composable
@@ -51,6 +61,36 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
                 Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
             }
             else -> Unit
+        }
+    }
+    val oneTapClient: SignInClient = Identity.getSignInClient(context)
+
+    val signInRequest = BeginSignInRequest.builder()
+        .setGoogleIdTokenRequestOptions(
+            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                .setSupported(true)
+                .setServerClientId("482122919504-jshbi5miq5gk34an7c2cukqsrgbvo0b2.apps.googleusercontent.com")
+                .setFilterByAuthorizedAccounts(false)
+                .build()
+        )
+        .build()
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
+            val idToken = credential.googleIdToken
+            if (idToken != null) {
+                viewModel.googleSignup(idToken) { success ->
+                    if (success) {
+                        Toast.makeText(context, "Giriş başarılı!", Toast.LENGTH_SHORT).show()
+
+                    } else {
+                        Toast.makeText(context, "Giriş başarısız!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
@@ -175,7 +215,22 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
                 Image(
                     painter =  painterResource(id = R.drawable.google) ,
                     contentDescription = "Google Image",
-                    modifier = Modifier.size(48.dp).clickable {}
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clickable {
+                            oneTapClient.beginSignIn(signInRequest)
+                                .addOnSuccessListener { result ->
+                                    val intentSenderRequest = IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
+                                    launcher.launch(intentSenderRequest)
+                                    navController.navigate("main")
+                                }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(context, "Google Sign-In başlatılamadı: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    Log.e("GoogleSignIn", "Google Sign-In başlatılırken hata oluştu", e)
+                                }
+
+
+                        }
                 )
             }
         }

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "112127424957",
-    "project_id": "toru-b9ec7",
-    "storage_bucket": "toru-b9ec7.firebasestorage.app"
+    "project_number": "482122919504",
+    "project_id": "toru-be98d",
+    "storage_bucket": "toru-be98d.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:112127424957:android:a973a9b2998ab4b03d3ad4",
+        "mobilesdk_app_id": "1:482122919504:android:e39f55f7fc4044cf03ab55",
         "android_client_info": {
           "package_name": "com.example.toruapplication"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyACdSgqoWdbluGvEhPNTNmNS0p9T1fb0M0"
+          "current_key": "AIzaSyDMWla7algfGlX3gvKyKwiuhYixtpfCDSI"
         }
       ],
       "services": {
