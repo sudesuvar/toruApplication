@@ -20,7 +20,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,28 +47,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.toruapplication.R
 import com.example.toruapplication.Routes
-import com.example.toruapplication.theme.ThemeViewModel
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 import com.example.toruapplication.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsPage(navController: NavController, viewModel: AuthViewModel){
-    val themeViewModel: ThemeViewModel = viewModel()
+fun SettingsPage(navController: NavController, viewModel: AuthViewModel, darkTheme: Boolean, onThemeUpdated: () -> Unit){
 
-    val isDarkTheme by themeViewModel.isDarkTheme
-    var checkedLanguage = remember { mutableStateOf(true) }
-
-    Log.i("Theme", "Recomposition happened! isDarkTheme: $isDarkTheme")
 
     Scaffold(
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(R.color.Primary),
-                    titleContentColor = colorResource(R.color.BrokenWhite),
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 navigationIcon = {
                     IconButton(onClick = {  navController.navigate(Routes.MainPage)}) {
@@ -90,21 +93,62 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel){
         Box(
             modifier = Modifier
                 .height(640.dp)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(innerPadding),
+
         ) {
             Spacer(modifier = Modifier.height(32.dp))
             Column {
-                SettingOption(
-                    text = "Theme",
-                    checked = isDarkTheme,
-                    onCheckedChange = { themeViewModel.toggleTheme() }
-                )
-                Log.i("Theme", "Current Theme: $isDarkTheme")
-                SettingOption(
-                    text = "Language",
-                    checked = checkedLanguage.value,
-                    onCheckedChange = { checkedLanguage.value = it }
-                )
+                // Theme switch
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
+                        .background(Color.White, shape = RoundedCornerShape(12.dp))
+                        .padding(vertical = 12.dp, horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "Theme",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.Black,
+                        modifier = Modifier.weight(1f)
+                    )
+                    ThemeSwitcher(
+                        darkTheme = darkTheme,
+                        onClick = onThemeUpdated,
+                        size = 40.dp,
+                    )
+
+                }
+
+                //Language
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
+                        .background(Color.White, shape = RoundedCornerShape(12.dp))
+                        .padding(vertical = 12.dp, horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "Language",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.Black,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -139,8 +183,8 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel){
     }
 }
 
-@Composable
-fun SettingOption(text: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+/*@Composable
+fun SettingOption(text: String, checked: Boolean) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -167,6 +211,8 @@ fun SettingOption(text: String, checked: Boolean, onCheckedChange: (Boolean) -> 
                     Icon(
                         imageVector = Icons.Filled.Check,
                         contentDescription = null,
+                        tint = if (darkTheme) MaterialTheme.colorScheme.secondaryContainer
+                        else MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(SwitchDefaults.IconSize),
                     )
                 }
@@ -175,6 +221,77 @@ fun SettingOption(text: String, checked: Boolean, onCheckedChange: (Boolean) -> 
             }
         )
     }
-}
+}*/
 
+@Composable
+fun ThemeSwitcher(
+    darkTheme: Boolean = false,
+    size: Dp = 150.dp,
+    iconSize: Dp = size / 3,
+    padding: Dp = 10.dp,
+    borderWidth: Dp = 1.dp,
+    parentShape: Shape = CircleShape,
+    toggleShape: Shape = CircleShape,
+    animationSpec: AnimationSpec<Dp> = tween(durationMillis = 300),
+    onClick: () -> Unit
+) {
+    val offset by animateDpAsState(
+        targetValue = if (darkTheme) 0.dp else size,
+        animationSpec = animationSpec
+    )
+
+    Box(modifier = Modifier
+        .width(size * 2)
+        .height(size)
+        .clip(shape = parentShape)
+        .clickable { onClick() }
+        .background(MaterialTheme.colorScheme.secondaryContainer)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(size)
+                .offset(x = offset)
+                .padding(all = padding)
+                .clip(shape = toggleShape)
+                .background(MaterialTheme.colorScheme.primary)
+        ) {}
+        Row(
+            modifier = Modifier
+                .border(
+                    border = BorderStroke(
+                        width = borderWidth,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                    shape = parentShape
+                )
+        ) {
+            Box(
+                modifier = Modifier.size(size),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    modifier = Modifier.size(iconSize),
+                    //karanlık
+                    imageVector = Icons.Default.Build,
+                    contentDescription = "Theme Icon",
+                    tint = if (darkTheme) MaterialTheme.colorScheme.secondaryContainer
+                    else MaterialTheme.colorScheme.primary
+                )
+            }
+            Box(
+                modifier = Modifier.size(size),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    modifier = Modifier.size(iconSize),
+                    //aydınlık
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Theme Icon",
+                    tint = if (darkTheme) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.secondaryContainer
+                )
+            }
+        }
+    }
+}
 

@@ -41,7 +41,7 @@ fun NoteCreate() {
         modifier = Modifier
             .background(Color(0xFFF6F8FB), shape = RoundedCornerShape(16.dp))
             .padding(16.dp)
-            .width(360.dp),
+            .width(300.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("New Note", color = Color.Black, fontSize = 24.sp)
@@ -136,7 +136,7 @@ fun NoteCreate() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(
+        /*Button(
             onClick = {
                 //player.playFile(audioFile ?: return@Button) oynatmak için
             },
@@ -147,6 +147,6 @@ fun NoteCreate() {
                 .height(50.dp)
         ) {
             Text("Save", color = Color.White, fontWeight = FontWeight.Bold)
-        }
+        }*/
     }
 }

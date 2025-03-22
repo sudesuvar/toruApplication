@@ -35,6 +35,7 @@ import com.example.toruapplication.viewmodel.AuthState
 import com.example.toruapplication.viewmodel.AuthViewModel
 import com.google.firebase.FirebaseApp
 import android.Manifest
+import androidx.compose.runtime.setValue
 import com.example.toruapplication.viewmodel.AudioRecorderViewModel
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
@@ -55,18 +56,16 @@ class MainActivity : ComponentActivity() {
         )
         enableEdgeToEdge()
         setContent {
-            val themeViewModel: ThemeViewModel = viewModel()
-            val isDarkTheme by themeViewModel.isDarkTheme
-            ToruTheme(isDarkTheme = isDarkTheme) {
-                ToruApp()
-                Log.i("TORUTHEME", "Recomposition happened! isDarkTheme: $isDarkTheme")
+            var darkTheme by remember { mutableStateOf(false) }
+            ToruTheme(darkTheme = darkTheme) {
+                ToruApp(darkTheme, onThemeUpdated = { darkTheme = !darkTheme })
             }
         }
     }
 }
 
 @Composable
-fun ToruApp(){
+fun ToruApp(darkTheme: Boolean, onThemeUpdated: () -> Unit){
     val navController = rememberNavController()
     val authviewModel = AuthViewModel()
     val authState = authviewModel.authState.observeAsState(AuthState.UnAuthenticated)
@@ -119,7 +118,8 @@ fun ToruApp(){
                 }
             }
             composable(Routes.SettingsPage) {
-                SettingsPage(navController, viewModel= authviewModel)
+                SettingsPage(navController, viewModel= authviewModel, darkTheme = darkTheme,
+                    onThemeUpdated = onThemeUpdated)
             }
         }
     }
