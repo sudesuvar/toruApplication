@@ -26,12 +26,32 @@ import com.example.toruapplication.Components.ActionBar
 import com.example.toruapplication.R
 import com.example.toruapplication.viewmodel.AudioNote
 import com.example.toruapplication.viewmodel.AudioRecorderViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
+
     val context = LocalContext.current
     var notes by remember { mutableStateOf<List<AudioNote>>(emptyList()) }
+    val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+    LaunchedEffect(Unit) {
+        userId?.let { uid ->
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(uid)
+                .collection("audio_notes")
+                .get()
+                .addOnSuccessListener { result ->
+                    notes = result.documents.mapNotNull { it.toObject(AudioNote::class.java) }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Firestore", "Veri alınamadı: ${e.message}")
+                }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -70,13 +90,9 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
                         .fillMaxSize()
                         .padding(horizontal = 4.dp)
                 ) {
-                   /* items(notes) { note ->
-                        VoiceNoteItem(title = note.title, audioUrl = note.audioUrl, viewModel, onDelete = {
-                            notes = notes - note
-                        })
-                    }*/
-
-
+                    items(notes) { note ->
+                        VoiceNoteItem(title = note.title, audioUrl = note.audioUrl, viewModel)
+                    }
                 }
             }
             Box(
@@ -88,9 +104,10 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
     }
 }
 
-/*@Composable
-fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewModel, onDelete: () -> Unit) {
+@Composable
+fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewModel) {
     val context = LocalContext.current
+    val mediaPlayer = remember { mutableStateOf<MediaPlayer?>(null) }
 
     Spacer(modifier = Modifier.height(16.dp))
     Row(
@@ -106,9 +123,18 @@ fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewM
 
         Row {
             IconButton(onClick = {
-                viewModel.playAudio(audioUrl, context)
-                Log.d("AudioURL", "Playing audio from URL: $audioUrl")
-
+                mediaPlayer.value?.release() // Önceki çalmayı durdur
+                mediaPlayer.value = MediaPlayer().apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                    setDataSource(audioUrl)
+                    prepare()
+                    start()
+                }
             }) {
                 Icon(
                     painter = painterResource(id = R.drawable.play),
@@ -117,28 +143,9 @@ fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewM
                     modifier = Modifier.size(24.dp)
                 )
             }
-            /*IconButton(onClick = {
-                if (audioUrl.isEmpty()) {
-                    Toast.makeText(context, "Ses kaydı bulunamadı!", Toast.LENGTH_SHORT).show()
-                } else {
-                    viewModel.deleteAudioNote(audioUrl, onSuccess = {
-                        Toast.makeText(context, "Ses başarıyla silindi", Toast.LENGTH_SHORT).show()
-                        onDelete()
-                    }, onFailure = {
-                        Toast.makeText(context, "Silme başarısız!", Toast.LENGTH_SHORT).show()
-                    })
-                }
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.delete),
-                    contentDescription = "Delete",
-                    tint = Color(0xFF2F5731),
-                    modifier = Modifier.size(24.dp)
-                )
-            }*/
         }
     }
-}*/
+}
 
 
 

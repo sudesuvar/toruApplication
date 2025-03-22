@@ -1,15 +1,11 @@
 package com.example.toruapplication.viewmodel
 
 import android.content.Context
-import android.media.AudioAttributes
-import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.core.net.toUri
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -89,7 +85,9 @@ class AudioRecorderViewModel( private val context: Context) :  AudioRecorder {
 }
 
 data class AudioNote(
-    val title: String,
-    val audioUrl: String
-)
-
+    val title: String = "",
+    val audioUrl: String = ""
+) {
+    // Firestore'un deserialize edebilmesi için boş bir constructor gerekli
+    constructor() : this("", "")
+}
