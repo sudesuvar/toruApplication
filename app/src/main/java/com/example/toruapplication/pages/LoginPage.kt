@@ -1,6 +1,7 @@
 package com.example.toruapplication.pages
 
 import android.app.Activity
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -38,8 +39,6 @@ import com.example.toruapplication.viewmodel.AuthViewModel
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 
 @Composable
@@ -174,7 +173,6 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
 
             Button(
                 onClick = {
-                    //Log.i("Credential", "Email : $email Password : $password")
                     viewModel.login(email.value, password.value)
                 },
                 modifier = Modifier
@@ -236,13 +234,19 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
         }
 
         if (isBottomSheetOpen.value) {
-            ForgotPasswordBottomSheet(onDismiss = { isBottomSheetOpen.value = false })
+            ForgotPasswordBottomSheet(
+                onDismiss = { isBottomSheetOpen.value = false },
+                viewModel = viewModel
+            )
         }
+
     }
 }
 
 @Composable
-fun ForgotPasswordBottomSheet(onDismiss: () -> Unit) {
+fun ForgotPasswordBottomSheet(onDismiss: () -> Unit, viewModel: AuthViewModel) {
+    val emailPass = remember { mutableStateOf("") }
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -279,8 +283,8 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit) {
 
 
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = emailPass.value,
+                    onValueChange = {emailPass.value = it},
                     label = { Text("Email", color = Color.Black) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -300,7 +304,11 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit) {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
-                    onClick = { /* Perform reset action */ },
+                    onClick = {  viewModel.forgotPassword(emailPass.value, context) {
+                        Toast.makeText(context, "Şifre sıfırlama maili gönderildi!", Toast.LENGTH_SHORT).show()
+                        onDismiss()
+                    }
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.Primary))

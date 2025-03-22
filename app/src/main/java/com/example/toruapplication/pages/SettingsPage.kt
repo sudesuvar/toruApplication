@@ -3,7 +3,6 @@ package com.example.toruapplication.pages
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import com.example.toruapplication.Components.TopBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.toruapplication.R
+import com.example.toruapplication.Routes
 import com.example.toruapplication.theme.ThemeViewModel
 import com.example.toruapplication.viewmodel.AuthViewModel
 
@@ -69,25 +69,19 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel){
                     titleContentColor = colorResource(R.color.BrokenWhite),
                 ),
                 navigationIcon = {
-                    IconButton(onClick = {  }) {
+                    IconButton(onClick = {  navController.navigate(Routes.MainPage)}) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Localized description",
-                            tint = colorResource(R.color.BrokenWhite)
+                            tint = colorResource(R.color.black)
                         )
                     }
                 },
                 title = {
-                    Text("Toru", textAlign = TextAlign.Center, modifier = Modifier.padding(start = 120.dp),
-                        style = TextStyle(
-                            color =   if (isDarkTheme ) {
-                                MaterialTheme.colorScheme.onSurface
-                            } else {
-                                MaterialTheme.colorScheme.onSurface
-                            }
-
-
-                        )
+                    Text("Toru", textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(start = 145.dp),
+                        color = colorResource(R.color.black),
+                        fontWeight = FontWeight.Bold
                     )
                 }
             )

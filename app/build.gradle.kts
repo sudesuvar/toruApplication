@@ -11,12 +11,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.toruapplication"
-        minSdk = 27
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        minSdk = 26
+        targetSdk = 34
     }
 
     buildTypes {
@@ -56,6 +52,8 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.media3.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,5 +66,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
     val auth_version = "20.7.0"
     implementation ("com.google.android.gms:play-services-auth:$auth_version")
+    val auth_api = "18.0.1"
+    implementation ("com.google.android.gms:play-services-auth-api-phone:$auth_api")
 
 }

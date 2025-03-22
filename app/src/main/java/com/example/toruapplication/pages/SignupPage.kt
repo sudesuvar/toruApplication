@@ -1,5 +1,6 @@
 package com.example.toruapplication.pages
 
+import android.app.Activity
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -11,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -167,6 +169,7 @@ fun SignupPage(navController: NavController, viewModel: AuthViewModel) {
                 onClick = {
                     Log.i("Credential", "Email : $email Password : $password")
                     viewModel.signup(email.value, password.value, name.value)
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
