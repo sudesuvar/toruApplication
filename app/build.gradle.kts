@@ -62,6 +62,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    val playintegrity = "16.0.0"
+    implementation ("com.google.firebase:firebase-appcheck-playintegrity:$playintegrity")
     val nav_version = "2.8.8"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     val auth_version = "20.7.0"

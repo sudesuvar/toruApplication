@@ -138,7 +138,7 @@ fun NoteCreate() {
 
         Button(
             onClick = {
-                player.playFile(audioFile ?: return@Button)
+                //player.playFile(audioFile ?: return@Button) oynatmak için
             },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.Primary)),
             shape = RoundedCornerShape(12.dp),
