@@ -39,20 +39,29 @@ fun NoteCreate() {
 
     Column(
         modifier = Modifier
-            .background(Color(0xFFF6F8FB), shape = RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(16.dp))
             .padding(16.dp)
             .width(300.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("New Note", color = Color.Black, fontSize = 24.sp)
+        Text("New Note",  color = MaterialTheme.colorScheme.onPrimary, fontSize = 24.sp)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },
-            label = { Text("Title") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Title", color = MaterialTheme.colorScheme.onSurface) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+                focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                cursorColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedBorderColor = MaterialTheme.colorScheme.onSurface
+            ),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -88,7 +97,7 @@ fun NoteCreate() {
                 Box(
                     modifier = Modifier
                         .size(64.dp)
-                        .background(color = colorResource(R.color.white), RoundedCornerShape(50))
+                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(50))
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.stop_button),
@@ -110,7 +119,7 @@ fun NoteCreate() {
                 Box(
                     modifier = Modifier
                         .size(64.dp)
-                        .background(Color(0xFFEAF6EA), RoundedCornerShape(50))
+                        .background(MaterialTheme.colorScheme.background, RoundedCornerShape(50))
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.microphone),

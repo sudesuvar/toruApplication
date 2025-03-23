@@ -29,12 +29,13 @@ import com.example.toruapplication.pages.MainPage
 import com.example.toruapplication.pages.SettingsPage
 import com.example.toruapplication.pages.WelcomePage
 import com.example.toruapplication.pages.SignupPage
-import com.example.toruapplication.theme.ThemeViewModel
-import com.example.toruapplication.theme.ToruTheme
+import com.example.toruapplication.ui.theme.ThemeViewModel
+import com.example.toruapplication.ui.theme.ToruTheme
 import com.example.toruapplication.viewmodel.AuthState
 import com.example.toruapplication.viewmodel.AuthViewModel
 import com.google.firebase.FirebaseApp
 import android.Manifest
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.setValue
 import com.example.toruapplication.viewmodel.AudioRecorderViewModel
 import com.google.firebase.appcheck.FirebaseAppCheck
@@ -56,7 +57,9 @@ class MainActivity : ComponentActivity() {
         )
         enableEdgeToEdge()
         setContent {
-            var darkTheme by remember { mutableStateOf(false) }
+            //var darkTheme by remember { mutableStateOf(false) }
+            val isSystemDark = isSystemInDarkTheme()
+            var darkTheme by remember { mutableStateOf(isSystemDark) }
             ToruTheme(darkTheme = darkTheme) {
                 ToruApp(darkTheme, onThemeUpdated = { darkTheme = !darkTheme })
             }

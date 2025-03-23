@@ -101,6 +101,7 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
                     focusManager.clearFocus()
                 })
             }
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
@@ -121,18 +122,18 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { email.value = it },
-                label = { Text("Email", color = Color.Black) },
+                label = { Text("Email", color = MaterialTheme.colorScheme.onSurface) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.Transparent,
                     focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = Color.Gray,
-                    focusedLabelColor = Color.Black,
-                    cursorColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedBorderColor = Color.Black
+                    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedBorderColor = MaterialTheme.colorScheme.onSurface
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Email
@@ -144,18 +145,18 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { password.value = it },
-                label = { Text("Password", color = Color.Black) },
+                label = { Text("Password",  color = MaterialTheme.colorScheme.onSurface) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.Transparent,
                     focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = Color.Gray,
-                    focusedLabelColor = Color.Black,
-                    cursorColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedBorderColor = Color.Black
+                    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedBorderColor = MaterialTheme.colorScheme.onSurface
                 ),
                 visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
@@ -180,7 +181,7 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
                     .padding(horizontal = 16.dp)
                     .height(50.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.Primary))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Login", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
@@ -189,7 +190,7 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
 
             Text(
                 text = "Forgot Password ?",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.clickable { isBottomSheetOpen.value = true },
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
@@ -199,7 +200,7 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
 
             Text(
                 text = "Don't have an account ? Signup ?",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.clickable { navController.navigate("signup") },
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
@@ -268,7 +269,7 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit, viewModel: AuthViewModel) {
                     text = "Reset Password",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -276,7 +277,7 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit, viewModel: AuthViewModel) {
                 Text(
                     text = "Enter your email to reset your password.",
                     fontSize = 14.sp,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.outline
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -290,11 +291,11 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit, viewModel: AuthViewModel) {
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = Color.Transparent,
                         focusedContainerColor = Color.Transparent,
-                        unfocusedLabelColor = Color.Gray,
-                        focusedLabelColor = Color.Black,
-                        cursorColor = Color.Black,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedBorderColor = Color.Black
+                        unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                        cursorColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        focusedBorderColor = MaterialTheme.colorScheme.onSurface
                     ),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email
@@ -311,7 +312,7 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit, viewModel: AuthViewModel) {
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.Primary))
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Reset Password", color = Color.White)
                 }

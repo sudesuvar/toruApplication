@@ -1,4 +1,4 @@
-package com.example.toruapplication.theme
+package com.example.toruapplication.ui.theme
 
 import android.util.Log
 import androidx.compose.runtime.MutableState

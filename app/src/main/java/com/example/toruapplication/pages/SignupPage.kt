@@ -62,7 +62,7 @@ fun SignupPage(navController: NavController, viewModel: AuthViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
@@ -78,7 +78,7 @@ fun SignupPage(navController: NavController, viewModel: AuthViewModel) {
         ) {
             Text(
                 text = "Sign Up",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 28.sp,
                 style = MaterialTheme.typography.titleLarge
             )
@@ -89,18 +89,18 @@ fun SignupPage(navController: NavController, viewModel: AuthViewModel) {
             OutlinedTextField(
                 value = name.value,
                 onValueChange = { name.value = it },
-                label = { Text("Name", color = Color.Black) }, // Label color set to black
+                label = { Text("Name", color = MaterialTheme.colorScheme.onSurface) }, // Label color set to black
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.Transparent,
                     focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = Color.Gray,
-                    focusedLabelColor = Color.Black,
-                    cursorColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedBorderColor = Color.Black
+                    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedBorderColor = MaterialTheme.colorScheme.onSurface
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Text
@@ -113,18 +113,18 @@ fun SignupPage(navController: NavController, viewModel: AuthViewModel) {
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { email.value = it },
-                label = { Text("Email", color = Color.Black) },
+                label = { Text("Email", color = MaterialTheme.colorScheme.onSurface) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.Transparent,
                     focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = Color.Gray,
-                    focusedLabelColor = Color.Black,
-                    cursorColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedBorderColor = Color.Black
+                    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedBorderColor = MaterialTheme.colorScheme.onSurface
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Email
@@ -137,24 +137,24 @@ fun SignupPage(navController: NavController, viewModel: AuthViewModel) {
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { password.value = it },
-                label = { Text("Password", color = Color.Black) },
+                label = { Text("Password", color = MaterialTheme.colorScheme.onSurface) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.Transparent,
                     focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = Color.Gray,
-                    focusedLabelColor = Color.Black,
-                    cursorColor = Color.Black,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedBorderColor = Color.Black
+                    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedBorderColor = MaterialTheme.colorScheme.onSurface
                 ),
                 visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     val icon = if (passwordVisible.value) "Hide" else "Show"
                     TextButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
-                        Text(icon, color = Color.Black)
+                        Text(icon, color = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -176,7 +176,7 @@ fun SignupPage(navController: NavController, viewModel: AuthViewModel) {
                     .padding(horizontal = 16.dp)
                     .height(50.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.Primary)) // Set button background to black
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Sign Up", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
@@ -186,7 +186,7 @@ fun SignupPage(navController: NavController, viewModel: AuthViewModel) {
 
             Text(
                 text = "Do you have a account ?",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.clickable { navController.navigate("login") },
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium

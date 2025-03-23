@@ -2,6 +2,7 @@ package com.example.toruapplication.pages
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,7 +42,9 @@ fun WelcomePage(navController: NavController, viewModel: AuthViewModel){
         }
     }
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
@@ -63,7 +66,7 @@ fun WelcomePage(navController: NavController, viewModel: AuthViewModel){
 
             Text(
                 text = "Welcome to Toro",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
@@ -74,7 +77,7 @@ fun WelcomePage(navController: NavController, viewModel: AuthViewModel){
             // Login Butonu
             Button(
                 onClick = {navController.navigate(Routes.LoginPage)  },
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.Primary)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -83,7 +86,7 @@ fun WelcomePage(navController: NavController, viewModel: AuthViewModel){
             ) {
                 Text(
                     text = "Login",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -94,7 +97,7 @@ fun WelcomePage(navController: NavController, viewModel: AuthViewModel){
             // Sign Up Butonu
             Button(
                 onClick = {navController.navigate(Routes.SignupPage)},
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.Primary)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -103,7 +106,7 @@ fun WelcomePage(navController: NavController, viewModel: AuthViewModel){
             ) {
                 Text(
                     text = "Sign Up",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )

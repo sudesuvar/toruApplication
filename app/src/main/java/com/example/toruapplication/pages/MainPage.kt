@@ -57,14 +57,14 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(R.color.Primary),
-                    titleContentColor = colorResource(R.color.BrokenWhite),
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 title = {
                     Text(
                         "Toru", textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
-                        color = colorResource(R.color.black),
+                        modifier = Modifier.padding(start = 185.dp),
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -79,7 +79,7 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
             if (notes.isEmpty()) {
                 Text(
                     "No notes yet",
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.align(Alignment.Center)
@@ -113,13 +113,13 @@ fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewM
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
-            .border(1.dp, color = Color.Black, RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, color = MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(title)
+        Text(title, color = MaterialTheme.colorScheme.onSecondary)
 
         Row {
             IconButton(onClick = {

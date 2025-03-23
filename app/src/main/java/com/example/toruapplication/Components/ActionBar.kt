@@ -31,7 +31,6 @@ import com.example.toruapplication.viewmodel.AudioRecorderViewModel
 fun ActionBar(navController: NavController) {
     var isExpanded by remember { mutableStateOf(false) }
     var showNoteCreate by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
         Column(
             horizontalAlignment = Alignment.End,
@@ -48,7 +47,7 @@ fun ActionBar(navController: NavController) {
                     SmallFab(
                         icon = Icons.Default.Settings,
                         contentDescription = "Setting Page",
-                        color = colorResource(R.color.Primary)
+                        color = MaterialTheme.colorScheme.primary
                     ) {
                         navController.navigate(Routes.SettingsPage)
                     }
@@ -56,7 +55,7 @@ fun ActionBar(navController: NavController) {
                     SmallFab(
                         icon = Icons.Default.Edit,
                         contentDescription = "Add voice note",
-                        color = colorResource(R.color.Primary)
+                        color = MaterialTheme.colorScheme.primary
                     ) {
                         showNoteCreate = true
                     }
@@ -67,7 +66,7 @@ fun ActionBar(navController: NavController) {
             SmallFab(
                 icon = Icons.Default.Add,
                 contentDescription = "Add",
-                color = colorResource(R.color.Primary)
+                color = MaterialTheme.colorScheme.primary
             ) {
                 isExpanded = !isExpanded
             }
@@ -77,7 +76,7 @@ fun ActionBar(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f)) // Arkaplanı hafif karartalım
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)) // Arkaplanı hafif karartalım
                     .clickable { showNoteCreate = false },
                 contentAlignment = Alignment.Center
             ) {

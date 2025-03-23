@@ -76,14 +76,14 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel, darkThe
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Localized description",
-                            tint = colorResource(R.color.black)
+                            tint = MaterialTheme.colorScheme.onPrimary,
                         )
                     }
                 },
                 title = {
                     Text("Toru", textAlign = TextAlign.Center,
                         modifier = Modifier.padding(start = 145.dp),
-                        color = colorResource(R.color.black),
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -106,7 +106,7 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel, darkThe
                         .height(80.dp)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
-                        .background(Color.White, shape = RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
                         .padding(vertical = 12.dp, horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -115,7 +115,7 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel, darkThe
                         text = "Theme",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         modifier = Modifier.weight(1f)
                     )
                     ThemeSwitcher(
@@ -133,7 +133,7 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel, darkThe
                         .height(80.dp)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
-                        .background(Color.White, shape = RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
                         .padding(vertical = 12.dp, horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -142,7 +142,7 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel, darkThe
                         text = "Language",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -155,7 +155,7 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel, darkThe
                         .height(80.dp)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
-                        .background(Color.White, shape = RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
                         .padding(vertical = 12.dp, horizontal = 16.dp)
                         .clickable { viewModel.signout() },
                     verticalAlignment = Alignment.CenterVertically
@@ -165,7 +165,7 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel, darkThe
                         text = "Log Out",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(32.dp))
@@ -182,47 +182,6 @@ fun SettingsPage(navController: NavController, viewModel: AuthViewModel, darkThe
         }
     }
 }
-
-/*@Composable
-fun SettingOption(text: String, checked: Boolean) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
-            .background(Color.White, shape = RoundedCornerShape(12.dp))
-            .padding(vertical = 12.dp, horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = text,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black,
-            modifier = Modifier.weight(1f)
-        )
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            thumbContent = if (checked) {
-                {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = null,
-                        tint = if (darkTheme) MaterialTheme.colorScheme.secondaryContainer
-                        else MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(SwitchDefaults.IconSize),
-                    )
-                }
-            } else {
-                null
-            }
-        )
-    }
-}*/
-
 @Composable
 fun ThemeSwitcher(
     darkTheme: Boolean = false,
@@ -269,26 +228,24 @@ fun ThemeSwitcher(
                 modifier = Modifier.size(size),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    modifier = Modifier.size(iconSize),
-                    //karanlık
-                    imageVector = Icons.Default.Build,
-                    contentDescription = "Theme Icon",
-                    tint = if (darkTheme) MaterialTheme.colorScheme.secondaryContainer
-                    else MaterialTheme.colorScheme.primary
+                //dark
+                Image(
+                    painter = painterResource(id = R.drawable.moon),
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier
+                        .size(iconSize)
                 )
             }
             Box(
                 modifier = Modifier.size(size),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    modifier = Modifier.size(iconSize),
-                    //aydınlık
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Theme Icon",
-                    tint = if (darkTheme) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.secondaryContainer
+                //light
+                Image(
+                    painter = painterResource(id = R.drawable.light),
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier
+                        .size(iconSize)
                 )
             }
         }
