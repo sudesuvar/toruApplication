@@ -72,17 +72,16 @@ fun ActionBar(navController: NavController) {
             }
         }
 
-        if (showNoteCreate) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)) // Arkaplanı hafif karartalım
-                    .clickable { showNoteCreate = false },
-                contentAlignment = Alignment.Center
-            ) {
-                NoteCreate()
-            }
+    if (showNoteCreate) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center
+        ) {
+            NoteCreate(onDismiss = { showNoteCreate = false })
         }
+    }
     }
 
 

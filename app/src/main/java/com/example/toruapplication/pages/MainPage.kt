@@ -36,6 +36,7 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
     val context = LocalContext.current
     var notes by remember { mutableStateOf<List<AudioNote>>(emptyList()) }
     val userId = FirebaseAuth.getInstance().currentUser?.uid
+    var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         userId?.let { uid ->
@@ -46,9 +47,11 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
                 .get()
                 .addOnSuccessListener { result ->
                     notes = result.documents.mapNotNull { it.toObject(AudioNote::class.java) }
+                    isLoading = false
                 }
                 .addOnFailureListener { e ->
                     Log.e("Firestore", "Veri alınamadı: ${e.message}")
+                    isLoading = false
                 }
         }
     }
@@ -76,25 +79,35 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            if (notes.isEmpty()) {
-                Text(
-                    "No notes yet",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 4.dp)
-                ) {
-                    items(notes) { note ->
-                        VoiceNoteItem(title = note.title, audioUrl = note.audioUrl, viewModel)
+            when {
+                isLoading -> { // Yüklenme sırasında gösterilecek indicator
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                notes.isEmpty() -> {
+                    Text(
+                        "No notes yet",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 4.dp)
+                    ) {
+                        items(notes) { note ->
+                            VoiceNoteItem(title = note.title, audioUrl = note.audioUrl, viewModel)
+                        }
                     }
                 }
             }
+
             Box(
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
@@ -139,6 +152,16 @@ fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewM
                 Icon(
                     painter = painterResource(id = R.drawable.play),
                     contentDescription = "Play",
+                    tint = Color(0xFFC14A4A),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            IconButton(onClick = {
+                viewModel.deleteAudioNote(audioUrl)
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.delete),
+                    contentDescription = "Delete",
                     tint = Color(0xFFC14A4A),
                     modifier = Modifier.size(24.dp)
                 )

@@ -58,7 +58,7 @@ fun WelcomePage(navController: NavController, viewModel: AuthViewModel){
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .size(200.dp) // Logo boyutu ayarlandı
+                    .size(200.dp)
                     .padding(bottom = 32.dp)
             )
 
@@ -66,7 +66,7 @@ fun WelcomePage(navController: NavController, viewModel: AuthViewModel){
 
             Text(
                 text = "Welcome to Toro",
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center

@@ -12,10 +12,10 @@ import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 import java.io.FileOutputStream
 
-class AudioRecorderViewModel( private val context: Context) :  AudioRecorder {
-
+class AudioRecorderViewModel(private val context: Context) : AudioRecorder {
     private var recorder: MediaRecorder? = null
     private var outputFile: File? = null
+    private var currentTitle: String = "" // 🔥 Kaydedilen başlık
     private val storageRef = FirebaseStorage.getInstance().reference
     private val firestoreRef = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -28,8 +28,9 @@ class AudioRecorderViewModel( private val context: Context) :  AudioRecorder {
         }
     }
 
-    override fun start(outputFile: File) {
+    override fun start(outputFile: File, title: String) {
         this.outputFile = outputFile
+        this.currentTitle = title
         createRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
@@ -49,11 +50,11 @@ class AudioRecorderViewModel( private val context: Context) :  AudioRecorder {
         recorder = null
 
         outputFile?.let { file ->
-            uploadAudioToFirebase(file)
+            uploadAudioToFirebase(file, currentTitle)
         }
     }
 
-    private fun uploadAudioToFirebase(file: File) {
+    private fun uploadAudioToFirebase(file: File, title: String) {
         val userId = auth.currentUser?.uid ?: return
         val fileName = "audio_notes/$userId/${System.currentTimeMillis()}.mp3"
         val audioRef = storageRef.child(fileName)
@@ -61,7 +62,7 @@ class AudioRecorderViewModel( private val context: Context) :  AudioRecorder {
         audioRef.putFile(file.toUri())
             .addOnSuccessListener {
                 audioRef.downloadUrl.addOnSuccessListener { uri ->
-                    saveAudioMetadata(userId, uri.toString())
+                    saveAudioMetadata(userId, uri.toString(), title) // 🔥 Başlık da kaydediliyor!
                 }
             }
             .addOnFailureListener { e ->
@@ -70,8 +71,8 @@ class AudioRecorderViewModel( private val context: Context) :  AudioRecorder {
             }
     }
 
-    private fun saveAudioMetadata(userId: String, audioUrl: String) {
-        val audioNote = AudioNote(title = "Ses Notu", audioUrl = audioUrl)
+    private fun saveAudioMetadata(userId: String, audioUrl: String, title: String) {
+        val audioNote = AudioNote(title = title, audioUrl = audioUrl) // 🔥 Başlığı da ekledik!
         firestoreRef.collection("users").document(userId)
             .collection("audio_notes")
             .add(audioNote)
@@ -82,7 +83,36 @@ class AudioRecorderViewModel( private val context: Context) :  AudioRecorder {
                 Log.e("Firestore", "Veri eklenemedi: ${e.message}")
             }
     }
+    fun deleteAudioNote(audioUrl: String) {
+        val userId = auth.currentUser?.uid ?: return
+
+        firestoreRef.collection("users")
+            .document(userId)
+            .collection("audio_notes")
+            .whereEqualTo("audioUrl", audioUrl)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    firestoreRef.collection("users")
+                        .document(userId)
+                        .collection("audio_notes")
+                        .document(document.id)
+                        .delete()
+                        .addOnSuccessListener {
+                            Toast.makeText(context, "Note deleted", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(context, "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Silme hatası: ${e.message}")
+                Toast.makeText(context, "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
 }
+
 
 data class AudioNote(
     val title: String = "",

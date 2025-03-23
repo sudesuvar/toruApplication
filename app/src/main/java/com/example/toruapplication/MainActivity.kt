@@ -29,7 +29,6 @@ import com.example.toruapplication.pages.MainPage
 import com.example.toruapplication.pages.SettingsPage
 import com.example.toruapplication.pages.WelcomePage
 import com.example.toruapplication.pages.SignupPage
-import com.example.toruapplication.ui.theme.ThemeViewModel
 import com.example.toruapplication.ui.theme.ToruTheme
 import com.example.toruapplication.viewmodel.AuthState
 import com.example.toruapplication.viewmodel.AuthViewModel

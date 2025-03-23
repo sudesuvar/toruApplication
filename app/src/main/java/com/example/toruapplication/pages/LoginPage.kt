@@ -112,7 +112,7 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
         ) {
             Text(
                 text = "Login",
-                color =MaterialTheme.colorScheme.onSurface,
+                color =MaterialTheme.colorScheme.onPrimary,
                 fontSize = 28.sp,
                 style = MaterialTheme.typography.titleLarge
             )
@@ -122,18 +122,16 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { email.value = it },
-                label = { Text("Email", color = MaterialTheme.colorScheme.onSurface) },
+                label = { Text("Email", color = MaterialTheme.colorScheme.onPrimary) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
-                    focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                    cursorColor = MaterialTheme.colorScheme.onSurface,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                    focusedBorderColor = MaterialTheme.colorScheme.onSurface
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Email
@@ -145,24 +143,22 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { password.value = it },
-                label = { Text("Password",  color = MaterialTheme.colorScheme.onSurface) },
+                label = { Text("Password",  color = MaterialTheme.colorScheme.onPrimary) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
-                    focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                    cursorColor = MaterialTheme.colorScheme.onSurface,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                    focusedBorderColor = MaterialTheme.colorScheme.onSurface
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     val icon = if (passwordVisible.value) "Hide" else "Show"
                     TextButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
-                        Text(icon, color = Color.Black)
+                        Text(icon, color = MaterialTheme.colorScheme.onPrimary)
                     }
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -183,14 +179,14 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("Login", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                Text("Login", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Forgot Password ?",
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.clickable { isBottomSheetOpen.value = true },
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
@@ -200,7 +196,7 @@ fun LoginPage(navController: NavController, viewModel: AuthViewModel) {
 
             Text(
                 text = "Don't have an account ? Signup ?",
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.clickable { navController.navigate("signup") },
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
@@ -256,7 +252,7 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit, viewModel: AuthViewModel) {
     ) {
         Surface(
             shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.background,
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
@@ -269,7 +265,7 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit, viewModel: AuthViewModel) {
                     text = "Reset Password",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -286,16 +282,14 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit, viewModel: AuthViewModel) {
                 OutlinedTextField(
                     value = emailPass.value,
                     onValueChange = {emailPass.value = it},
-                    label = { Text("Email", color = Color.Black) },
+                    label = { Text("Email", color = MaterialTheme.colorScheme.primary) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedLabelColor = MaterialTheme.colorScheme.outline,
-                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                        cursorColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                        focusedBorderColor = MaterialTheme.colorScheme.onSurface
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email
@@ -314,7 +308,7 @@ fun ForgotPasswordBottomSheet(onDismiss: () -> Unit, viewModel: AuthViewModel) {
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text("Reset Password", color = Color.White)
+                    Text(text = "Reset Password", color = MaterialTheme.colorScheme.onPrimary)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

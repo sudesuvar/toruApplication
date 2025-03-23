@@ -23,9 +23,8 @@ import java.io.File
 
 
 
-@Preview
 @Composable
-fun NoteCreate() {
+fun NoteCreate(onDismiss: () -> Unit) { // onDismiss ekledik
     var title by remember { mutableStateOf("") }
     val context = LocalContext.current
     var audioFile: File? = null
@@ -36,7 +35,6 @@ fun NoteCreate() {
         AndroidAudioPlayer(context)
     }
 
-
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(16.dp))
@@ -44,23 +42,44 @@ fun NoteCreate() {
             .width(300.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("New Note",  color = MaterialTheme.colorScheme.onPrimary, fontSize = 24.sp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("New Note",
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 24.sp,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+
+            IconButton(onClick = { onDismiss() }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.cross),
+                    contentDescription = "Exit",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Text("Give your audio recording a title first",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 8.sp,
+            modifier = Modifier.padding(top = 8.dp),
+        )
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },
             label = { Text("Title", color = MaterialTheme.colorScheme.onSurface) },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent,
-                unfocusedLabelColor = MaterialTheme.colorScheme.outline,
-                focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                cursorColor = MaterialTheme.colorScheme.onSurface,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                focusedBorderColor = MaterialTheme.colorScheme.onSurface
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
             ),
         )
 
@@ -81,7 +100,6 @@ fun NoteCreate() {
                     modifier = Modifier.size(64.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                //Text(if (isRecording) "Recording..." else "Click the button to register")
             }
         }
 
@@ -111,10 +129,9 @@ fun NoteCreate() {
 
             IconButton(onClick = {
                 val audioFile = File(context.cacheDir, "audio.mp3").also {
-                    recorder.start(it)
+                    recorder.start(it, title)
                     audioFile = it
                 }
-
             }) {
                 Box(
                     modifier = Modifier
@@ -131,31 +148,6 @@ fun NoteCreate() {
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            /*val minutes = recordingTime / 60
-            val seconds = recordingTime % 60
-            Text(String.format("%02d:%02d", minutes, seconds), fontSize = 14.sp)
-            Text(if (isRecording) "Recording in progress" else "Recording has not started", fontSize = 14.sp)*/
-        }
-
         Spacer(modifier = Modifier.height(24.dp))
-
-        /*Button(
-            onClick = {
-                //player.playFile(audioFile ?: return@Button) oynatmak için
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.Primary)),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-        ) {
-            Text("Save", color = Color.White, fontWeight = FontWeight.Bold)
-        }*/
     }
 }
