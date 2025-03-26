@@ -71,4 +71,6 @@ dependencies {
     val auth_api = "18.0.1"
     implementation ("com.google.android.gms:play-services-auth-api-phone:$auth_api")
 
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
+
 }

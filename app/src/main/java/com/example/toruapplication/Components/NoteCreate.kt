@@ -1,6 +1,7 @@
 package com.example.toruapplication.Components
 
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.toruapplication.R
 import com.example.toruapplication.viewmodel.AndroidAudioPlayer
 import com.example.toruapplication.viewmodel.AudioRecorderViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import java.io.File
 
 
@@ -30,9 +33,6 @@ fun NoteCreate(onDismiss: () -> Unit) { // onDismiss ekledik
     var audioFile: File? = null
     val recorder by lazy {
         AudioRecorderViewModel(context)
-    }
-    val player by lazy {
-        AndroidAudioPlayer(context)
     }
 
     Column(
@@ -64,11 +64,29 @@ fun NoteCreate(onDismiss: () -> Unit) { // onDismiss ekledik
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Give your audio recording a title first",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 8.sp,
-            modifier = Modifier.padding(top = 8.dp),
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Give your audio recording a title first",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 8.sp,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+            )
+            /*Text(
+                text = "Recording Time: $recordTime s",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+            )*/
+
+
+        }
+
+
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },

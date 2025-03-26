@@ -3,7 +3,6 @@ package com.example.toruapplication.pages
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -16,10 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.toruapplication.Components.ActionBar
@@ -28,17 +27,20 @@ import com.example.toruapplication.viewmodel.AudioNote
 import com.example.toruapplication.viewmodel.AudioRecorderViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.accompanist.swiperefresh.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
-
     val context = LocalContext.current
     var notes by remember { mutableStateOf<List<AudioNote>>(emptyList()) }
     val userId = FirebaseAuth.getInstance().currentUser?.uid
+    var isRefreshing by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) {
+
+    fun refreshNotes() {
+        isRefreshing = true
         userId?.let { uid ->
             FirebaseFirestore.getInstance()
                 .collection("users")
@@ -47,13 +49,19 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
                 .get()
                 .addOnSuccessListener { result ->
                     notes = result.documents.mapNotNull { it.toObject(AudioNote::class.java) }
+                    isRefreshing = false
                     isLoading = false
                 }
                 .addOnFailureListener { e ->
                     Log.e("Firestore", "Veri alınamadı: ${e.message}")
+                    isRefreshing = false
                     isLoading = false
                 }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        refreshNotes()
     }
 
     Scaffold(
@@ -77,7 +85,8 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
         Box(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
             when {
                 isLoading -> { // Yüklenme sırasında gösterilecek indicator
@@ -117,10 +126,12 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
     }
 }
 
+
 @Composable
 fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewModel) {
     val context = LocalContext.current
     val mediaPlayer = remember { mutableStateOf<MediaPlayer?>(null) }
+    var isPlaying by remember { mutableStateOf(false) }
 
     Spacer(modifier = Modifier.height(16.dp))
     Row(
@@ -136,23 +147,32 @@ fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewM
 
         Row {
             IconButton(onClick = {
-                mediaPlayer.value?.release() // Önceki çalmayı durdur
-                mediaPlayer.value = MediaPlayer().apply {
-                    setAudioAttributes(
-                        AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .build()
-                    )
-                    setDataSource(audioUrl)
-                    prepare()
-                    start()
+                if (isPlaying) {
+                    mediaPlayer.value?.pause()
+                    isPlaying = false
+                } else {
+                    mediaPlayer.value?.release() // Önceki oynatmayı temizle
+                    mediaPlayer.value = MediaPlayer().apply {
+                        setAudioAttributes(
+                            AudioAttributes.Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .setUsage(AudioAttributes.USAGE_MEDIA)
+                                .build()
+                        )
+                        setDataSource(audioUrl)
+                        prepare()
+                        start()
+                        isPlaying = true
+                        setOnCompletionListener {
+                            isPlaying = false
+                        }
+                    }
                 }
             }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.play),
-                    contentDescription = "Play",
-                    tint = Color(0xFFC14A4A),
+                    painter = painterResource(id = if (isPlaying) R.drawable.pause else R.drawable.play),
+                    contentDescription = if (isPlaying) "Pause" else "Play",
+                    tint = if (isPlaying) Color(0xFFC14A4A) else Color(0xFF4CAF50),
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -169,11 +189,3 @@ fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewM
         }
     }
 }
-
-
-
-
-
-
-
-
