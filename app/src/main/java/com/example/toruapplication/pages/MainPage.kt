@@ -59,6 +59,10 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
                 }
         }
     }
+    fun getSortedNotes(): List<AudioNote> {
+        return notes.sortedByDescending { it.isPinned } // Sabitlenenler en başa gelir
+    }
+
 
     LaunchedEffect(Unit) {
         refreshNotes()
@@ -110,8 +114,19 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
                             .fillMaxSize()
                             .padding(horizontal = 4.dp)
                     ) {
-                        items(notes) { note ->
-                            VoiceNoteItem(title = note.title, audioUrl = note.audioUrl, viewModel)
+                        items(getSortedNotes()) { note -> // Use sorted list
+                            VoiceNoteItem(
+                                title = note.title,
+                                audioUrl = note.audioUrl,
+                                timestamp = note.timestamp,
+                                isPinned = note.isPinned,
+                                onPinClick = {
+                                    viewModel.pinAudioNote(note.audioUrl){refreshNotes()
+                                    }
+                                    refreshNotes() // Refresh notes after pinning
+                                },
+                                viewModel = viewModel
+                            )
                         }
                     }
                 }
@@ -128,7 +143,7 @@ fun MainPage(navController: NavController, viewModel: AudioRecorderViewModel) {
 
 
 @Composable
-fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewModel) {
+fun VoiceNoteItem(title: String, audioUrl: String,timestamp: String,isPinned: Boolean, onPinClick: () -> Unit, viewModel: AudioRecorderViewModel) {
     val context = LocalContext.current
     val mediaPlayer = remember { mutableStateOf<MediaPlayer?>(null) }
     var isPlaying by remember { mutableStateOf(false) }
@@ -143,7 +158,44 @@ fun VoiceNoteItem(title: String, audioUrl: String, viewModel: AudioRecorderViewM
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(title, color = MaterialTheme.colorScheme.onSecondary)
+        IconButton(
+            onClick = onPinClick,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.thumbtacks),
+                contentDescription = "Pin",
+                tint = if (isPinned) Color(0xFFFFA500) else Color.Gray,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        Column(verticalArrangement = Arrangement.Center) {
+
+            Text(
+                title,
+                color = MaterialTheme.colorScheme.onSecondary,
+                fontWeight = FontWeight.Bold
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    painter = painterResource(id = R.drawable.calendar),
+                    contentDescription = "Timestamp",
+                    tint = Color.LightGray,
+                    modifier = Modifier.size(16.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    timestamp,
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontWeight = FontWeight.Normal,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+
+
+        }
+
 
         Row {
             IconButton(onClick = {

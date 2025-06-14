@@ -15,7 +15,7 @@ import java.io.FileOutputStream
 class AudioRecorderViewModel(private val context: Context) : AudioRecorder {
     private var recorder: MediaRecorder? = null
     private var outputFile: File? = null
-    private var currentTitle: String = "" // 🔥 Kaydedilen başlık
+    private var currentTitle: String = ""
     private val storageRef = FirebaseStorage.getInstance().reference
     private val firestoreRef = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -62,7 +62,9 @@ class AudioRecorderViewModel(private val context: Context) : AudioRecorder {
         audioRef.putFile(file.toUri())
             .addOnSuccessListener {
                 audioRef.downloadUrl.addOnSuccessListener { uri ->
-                    saveAudioMetadata(userId, uri.toString(), title) // 🔥 Başlık da kaydediliyor!
+                    // Use the formatted timestamp
+                    val timestamp = AudioNote.getCurrentTimestamp()
+                    saveAudioMetadata(userId, uri.toString(), title, timestamp)
                 }
             }
             .addOnFailureListener { e ->
@@ -71,8 +73,10 @@ class AudioRecorderViewModel(private val context: Context) : AudioRecorder {
             }
     }
 
-    private fun saveAudioMetadata(userId: String, audioUrl: String, title: String) {
-        val audioNote = AudioNote(title = title, audioUrl = audioUrl) // 🔥 Başlığı da ekledik!
+
+
+    private fun saveAudioMetadata(userId: String, audioUrl: String, title: String, timestamp: String) {
+        val audioNote = AudioNote(title = title, audioUrl = audioUrl, timestamp = timestamp)
         firestoreRef.collection("users").document(userId)
             .collection("audio_notes")
             .add(audioNote)
@@ -83,6 +87,10 @@ class AudioRecorderViewModel(private val context: Context) : AudioRecorder {
                 Log.e("Firestore", "Veri eklenemedi: ${e.message}")
             }
     }
+
+
+
+
     fun deleteAudioNote(audioUrl: String) {
         val userId = auth.currentUser?.uid ?: return
 
@@ -111,13 +119,47 @@ class AudioRecorderViewModel(private val context: Context) : AudioRecorder {
                 Toast.makeText(context, "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
+    fun pinAudioNote(audioUrl: String, onComplete: () -> Unit) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        userId?.let { uid ->
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(uid)
+                .collection("audio_notes")
+                .whereEqualTo("audioUrl", audioUrl)
+                .get()
+                .addOnSuccessListener { result ->
+                    val document = result.documents.firstOrNull()
+                    document?.let {
+                        val isPinned = it.getBoolean("isPinned") ?: false
+                        it.reference.update("isPinned", !isPinned)
+                            .addOnSuccessListener {
+                                onComplete() // Güncellemeden sonra çalıştır
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("Firestore", "Pin update failed: ${e.message}")
+                            }
+                    }
+                }
+        }
+    }
 }
 
 
 data class AudioNote(
     val title: String = "",
-    val audioUrl: String = ""
+    val audioUrl: String = "",
+    val timestamp: String = "", // Store formatted date and time
+    val isPinned: Boolean = false // Sabitleme durumu
 ) {
-    // Firestore'un deserialize edebilmesi için boş bir constructor gerekli
-    constructor() : this("", "")
+    constructor() : this("", "", getCurrentTimestamp(), false)
+
+    companion object {
+        fun getCurrentTimestamp(): String {
+            val format = java.text.SimpleDateFormat("dd.MM.yyyy/HH:mm", java.util.Locale.getDefault())
+            return format.format(java.util.Date()) // Return formatted date and time
+        }
+    }
 }
+
